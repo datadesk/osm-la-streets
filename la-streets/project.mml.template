@@ -657,7 +657,7 @@
   "scale": 1,
   "metatile": 2,
   "name": "LA Streets",
-  "description": "A street-heavy base layer for overlaying point data about Southern California",
+  "description": "A street-centric base layer for overlaying point data about Southern California",
   "attribution": "Los Angeles Times Data Desk",
   "version": "0.1.0"
 }
