@@ -1,4 +1,6 @@
-quiet-la/fonts/*
-quiet-la/project.mml
+la-streets/fonts/*
+la-streets/project.mml
 *.pyc
 *.osm.bz2
+*.mbtiles
+.DS_Store
