@@ -38,8 +38,8 @@ from sys import path
 from os.path import join
 
 this_dir = os.path.dirname(__file__)
-source_mml = os.path.join(this_dir, 'quiet-la/project.mml.template')
-target_mml = os.path.join(this_dir, 'quiet-la/project.mml')
+source_mml = os.path.join(this_dir, 'la-streets/project.mml.template')
+target_mml = os.path.join(this_dir, 'la-streets/project.mml')
 
 with open(source_mml, 'r') as f:
   newf = json.loads(f.read())

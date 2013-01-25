@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Quiet LA</title>
+    <title>LA Streets</title>
     <meta name="description" content="" />
     <link rel="stylesheet" href="https://s3.amazonaws.com/latimes-datadesk-template/js/leaflet-0.4.4/leaflet.css" />
     <!--[if lte IE 8]><link rel="stylesheet" href="https://s3.amazonaws.com/latimes-datadesk-template/js/leaflet-0.4.4/leaflet.ie.css"  /><![endif]-->
@@ -100,8 +100,8 @@
         <div id="overlay">
             <div id="overlay-about" class="overlay-box">
                 <div id="overlay-headline" class="overlay-section">
-                    <h1>Quiet LA</h1>
-                    <p id="byline">A muted base layer about Southern California</a></p>
+                    <h1>LA Streets</h1>
+                    <p id="byline">A street-heavy base layer for overlaying point data about Southern California</a></p>
                 </div>
                 <div id="overlay-search" class="overlay-section">
                     <form id="geocoder"></form>
@@ -126,18 +126,15 @@ var mapOptions = {
 var map = new L.Map('map-canvas', mapOptions);
 map.setView(new L.LatLng(34.05, -118.6), 10);
 var attribution = "Map data (c) <a href='http://www.openstreetmap.org/'>OpenStreetMap</a> contributors, <a href='http://creativecommons.org/licenses/by-sa/2.0/'>CC-BY-SA</a>";
-var v2Layer = new L.TileLayer("http://{s}.latimes.com.s3.amazonaws.com/quiet-la-0.2.1/{z}/{x}/{y}.png", {
+var v1layer = new L.TileLayer("http://{s}.latimes.com.s3.amazonaws.com/la-streets-0.1.0/{z}/{x}/{y}.png", {
      attribution: attribution,
      subdomains: [
-        'tiles1',
-        'tiles2',
-        'tiles3',
-        'tiles4'
+        'tiles',
     ]
 });
-map.addLayer(v2Layer);
+map.addLayer(v1layer);
 var baseLayers = {
-    "v0.2.1": v2Layer
+    "v0.1.0": v1layer
 };
 L.control.layers(baseLayers, {}, {collapsed:false}).addTo(map);
 </script>

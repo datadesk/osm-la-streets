@@ -10,18 +10,15 @@ def get_version():
     """
     Returns the current version of the MapBox project.
     """
-    f = open('./quiet-la/project.mml','r')
+    f = open('./la-streets/project.mml','r')
     return json.load(f)['version']
 
 
 env.tilemill = '$TILEMILL/index.js'
 env.version = get_version()
-env.release_name = 'quiet-la-%s' % env.version
+env.release_name = 'la-streets-%s' % env.version
 env.tile_buckets = (
-    'tiles1.latimes.com',
-    'tiles2.latimes.com',
-    'tiles3.latimes.com',
-    'tiles4.latimes.com',
+    'tiles.latimes.com',
 )
 
 
@@ -32,7 +29,7 @@ def rollout():
     deploy_tiles()
 
 
-def update_osm(state='california', postgres_user='postgres', postgres_host='localhost'):
+def update_osm(state='california', postgres_user='postgres', postgres_host='localhost', download=True):
     """
     Download and install the latest snapshot of the OpenStreetMap database.
     
@@ -56,18 +53,19 @@ def update_osm(state='california', postgres_user='postgres', postgres_host='loca
     print('Updating OpenStreetMap slice for the state of %s' % state.title())
     # Figure out what file we want
     bz2 = '%s.osm.bz2' % state
-    # Delete it from the local folder if it already exists
-    if os.path.exists('./%s' % bz2):
-        print('- Deleting existing OpenStreetMap bz2 from this directory')
-        os.remove('./%s' % bz2)
-    # Download a new file from our data source
-    url ='http://download.geofabrik.de/openstreetmap/north-america/us/%s'
-    print('- Downloading new OpenStreetMap slice from geofabrik.de')
-    urllib.urlretrieve(url % bz2, './%s' % bz2)
-    print('- Download successful')
-    # Unzip file
+    if download:
+        # Delete it from the local folder if it already exists
+        if os.path.exists('./%s' % bz2):
+            print('- Deleting existing OpenStreetMap bz2 from this directory')
+            os.remove('./%s' % bz2)
+        # Download a new file from our data source
+        url ='http://download.geofabrik.de/openstreetmap/north-america/us/%s'
+        print('- Downloading new OpenStreetMap slice from geofabrik.de')
+        urllib.urlretrieve(url % bz2, './%s' % bz2)
+        print('- Download successful')
+        # Unzip file
     print ('- Unzipping OpenStreetMap bz2')
-    local('bunzip2 ./%s' % bz2)
+    local('bunzip2 --force ./%s' % bz2)
     print ('- Unzip successful')
     # Drop the database if it already exists
     db = 'osm_%s' % state
@@ -99,18 +97,18 @@ def build_tiles():
     """
     print('Building map tiles')
     # Have TileMill build the current project as an mbtiles file
-    local('%(tilemill)s export quiet-la ./%(release_name)s.mbtiles --format=mbtiles' % env)
+    #local('%(tilemill)s export la-streets ./%(release_name)s.mbtiles --format=mbtiles' % env)
     # Crack open the mbtiles file as a directory
     print('- Opening mbtiles file')
     local('mb-util ./%(release_name)s.mbtiles %(release_name)s' % env)
     print('- Deleting mbtiles file')
-    local('rm -rf ./%(release_name)s.mbtiles' % env)
+    #local('rm -rf ./%(release_name)s.mbtiles' % env)
     # Zip up the directory for deployment
     #print('- Zipping up file directory')
     #local('tar -zcvf %(release_name)s.tar.gz ./%(release_name)s/' % env)
-    print('- Deleting file directory')
+    #print('- Deleting file directory')
     #local('rm -rf ./%(release_name)s' % env)
-    print('- Deleting export log')
+    #print('- Deleting export log')
     #local('rm *export*')
     print(green('Success!'))
 
@@ -128,9 +126,9 @@ def build_samples():
         for n in ['socal.png', 'sfvalley.png', 'dtla.png']]
     [os.remove(i) for i in file_paths if os.path.exists(i)]
     # Create the new samples
-    local("%(tilemill)s export quiet-la samples/%(version)s/socal.png --format=png --bbox=-118.921,34.696,-117.421,33.564 --minzoom=9 --maxzoom=9 --width=1024" % env)
-    local("%(tilemill)s export quiet-la samples/%(version)s/sfvalley.png --format=png --bbox=-118.685,34.106,-118.259,34.308 --minzoom=12 --maxzoom=12 --width=1024" % env)
-    local("%(tilemill)s export quiet-la samples/%(version)s/dtla.png --format=png --bbox=-118.280,34.0233,-118.216,34.064 --minzoom=14 --maxzoom=14 --width=1024" % env)
+    local("%(tilemill)s export la-streets samples/%(version)s/socal.png --format=png --bbox=-118.921,34.696,-117.421,33.564 --minzoom=9 --maxzoom=9 --width=1024" % env)
+    local("%(tilemill)s export la-streets samples/%(version)s/sfvalley.png --format=png --bbox=-118.685,34.106,-118.259,34.308 --minzoom=12 --maxzoom=12 --width=1024" % env)
+    local("%(tilemill)s export la-streets samples/%(version)s/dtla.png --format=png --bbox=-118.280,34.0233,-118.216,34.064 --minzoom=14 --maxzoom=14 --width=1024" % env)
 
 
 def deploy_tiles():
