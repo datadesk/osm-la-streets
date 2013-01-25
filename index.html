@@ -126,10 +126,13 @@ var mapOptions = {
 var map = new L.Map('map-canvas', mapOptions);
 map.setView(new L.LatLng(34.05, -118.6), 10);
 var attribution = "Map data (c) <a href='http://www.openstreetmap.org/'>OpenStreetMap</a> contributors, <a href='http://creativecommons.org/licenses/by-sa/2.0/'>CC-BY-SA</a>";
-var v1layer = new L.TileLayer("http://{s}.latimes.com.s3.amazonaws.com/la-streets-0.1.0/{z}/{x}/{y}.png", {
+var v1layer = new L.TileLayer("http://{s}.latimes.com/la-streets-0.1.0/{z}/{x}/{y}.png", {
      attribution: attribution,
      subdomains: [
-        'tiles',
+        'tiles1',
+        'tiles2',
+        'tiles3',
+        'tiles4',
     ]
 });
 map.addLayer(v1layer);
