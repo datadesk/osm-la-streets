@@ -3,4 +3,4 @@ la-streets/project.mml
 *.pyc
 *.osm.bz2
 *.mbtiles
-.DS_Store
+*.DS_Store
