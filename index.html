@@ -2,10 +2,10 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Quiet LA</title>
+    <title>LA Streets</title>
     <meta name="description" content="" />
-    <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.4.5/leaflet.css" />
-    <!--[if lte IE 8]><link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.4.5/leaflet.ie.css"  /><![endif]-->
+    <link rel="stylesheet" href="https://s3.amazonaws.com/latimes-datadesk-template/js/leaflet-0.4.4/leaflet.css" />
+    <!--[if lte IE 8]><link rel="stylesheet" href="https://s3.amazonaws.com/latimes-datadesk-template/js/leaflet-0.4.4/leaflet.ie.css"  /><![endif]-->
     <style type="text/css">
         /* RESET */
         html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outline:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
@@ -61,8 +61,7 @@
             height:28px;
         }
         #byline {
-            font-size:16px;
-            line-height:20px;
+            font-size:14px;
         }
         #overlay {
             position: absolute;
@@ -91,7 +90,7 @@
             height:28px;
         }
     </style>
-    <script type="text/javascript" src='http://cdn.leafletjs.com/leaflet-0.4.5/leaflet.js'></script>
+    <script type="text/javascript" src='https://s3.amazonaws.com/latimes-datadesk-template/js/leaflet-0.4.4/leaflet.js'></script>
     <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?sensor=false"></script>
     <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js"></script>
     <script type="text/javascript" src="http://graphics.latimes.com/static/js/jquery.geocodify.0.11.min.js"></script>
@@ -101,8 +100,8 @@
         <div id="overlay">
             <div id="overlay-about" class="overlay-box">
                 <div id="overlay-headline" class="overlay-section">
-                    <h1>Quiet L.A.</h1>
-                    <p id="byline">A muted, open-source base layer about Southern California</a> by the Los Angeles Times Data Desk. <a href="http://datadesk.latimes.com/posts/2012/11/introducing-quiet-la/">Read all about it</a>.</p>
+                    <h1>LA Streets</h1>
+                    <p id="byline">A street-centric base layer for overlaying point data about Southern California</a></p>
                 </div>
                 <div id="overlay-search" class="overlay-section">
                     <form id="geocoder"></form>
@@ -116,58 +115,26 @@
 <script type="text/javascript">
 // Configure the basic map settings
 var mapOptions = {
+    //scrollWheelZoom: false,
     maxZoom:15,
-    minZoom:8,
+    minZoom:9,
     maxBounds: new L.LatLngBounds(
-        new L.LatLng(35.6261, -114.071),
+        new L.LatLng(35.3578, -114.071),
         new L.LatLng(32.4867, -120.9814)
     )
 };
 var map = new L.Map('map-canvas', mapOptions);
-map.setView(new L.LatLng(34.05, -118.6), 8);
+map.setView(new L.LatLng(34.05, -118.6), 10);
 var attribution = "Map data (c) <a href='http://www.openstreetmap.org/'>OpenStreetMap</a> contributors, <a href='http://creativecommons.org/licenses/by-sa/2.0/'>CC-BY-SA</a>";
-var v1Layer = new L.TileLayer("http://{s}.latimes.com.s3.amazonaws.com/quiet-la-0.2.1/{z}/{x}/{y}.png", {
+var v1layer = new L.TileLayer("http://{s}.latimes.com.s3.amazonaws.com/la-streets-0.1.0/{z}/{x}/{y}.png", {
      attribution: attribution,
      subdomains: [
-        'tiles1',
-        'tiles2',
-        'tiles3',
-        'tiles4'
+        'tiles',
     ]
 });
-var v2Layer = new L.TileLayer("http://{s}.latimes.com.s3.amazonaws.com/quiet-la-0.2.2/{z}/{x}/{y}.png", {
-     attribution: attribution,
-     subdomains: [
-        'tiles1',
-        'tiles2',
-        'tiles3',
-        'tiles4'
-    ]
-});
-var v3Layer = new L.TileLayer("http://{s}.latimes.com.s3.amazonaws.com/quiet-la-0.2.3/{z}/{x}/{y}.png", {
-     attribution: attribution,
-     subdomains: [
-        'tiles1',
-        'tiles2',
-        'tiles3',
-        'tiles4'
-    ]
-});
-var v4Layer = new L.TileLayer("http://{s}.latimes.com.s3.amazonaws.com/quiet-la-0.2.4/{z}/{x}/{y}.png", {
-     attribution: attribution,
-     subdomains: [
-        'tiles1'//,
-        //'tiles2',
-        //'tiles3',
-        //'tiles4'
-    ]
-});
-map.addLayer(v4Layer);
+map.addLayer(v1layer);
 var baseLayers = {
-    "v0.2.4": v4Layer,
-    "v0.2.3": v3Layer,
-    "v0.2.2": v2Layer,
-    "v0.2.1": v1Layer
+    "v0.1.0": v1layer
 };
 L.control.layers(baseLayers, {}, {collapsed:false}).addTo(map);
 </script>
@@ -190,6 +157,7 @@ var maxX = -114.071;
 
 $("#geocoder").geocodify({
     onSelect: function (result) { 
+        console.log(result);
         // Extract the location from the geocoder result
         var location = result.geometry.location;
         // Center the map on the result, offset a litte because of our big overlays
@@ -232,4 +200,3 @@ $("#geocoder").geocodify({
 
 </body>
 </html>
-
